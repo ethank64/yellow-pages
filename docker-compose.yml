@@ -1,0 +1,18 @@
+services:
+  mcp:
+    build: .
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      - YELLOW_PAGES_TRANSPORT=streamable-http
+    volumes:
+      # Persist Chroma DB between restarts
+      - chroma_data:/app/chroma_db_agent_tools_v9
+    # Schema is in image; override with a volume if you use a custom schema path
+    # volumes:
+    #   - ./sample_schema.json:/app/sample_schema.json
+
+volumes:
+  chroma_data:

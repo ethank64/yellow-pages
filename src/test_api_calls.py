@@ -1,8 +1,7 @@
-import json
 import os
-from utils import read_and_simplify_schema, use_api
+from .utils import read_and_simplify_schema, use_api
 
-# Define the path to your schema file
+# Define the path to your schema file (relative to project root when run from there)
 SCHEMA_FILE_PATH = "./sample_schema.json"
 
 # Define a dictionary of test parameters for different operations
@@ -58,7 +57,7 @@ def run_all_api_tests(schema_file: str):
     total_tests = 0
     passed_tests = 0
     failed_tests = 0
-    
+
     # Convert list of operations to a dict for easier lookup by name
     simplified_schema_dict = {op['name']: op for op in simplified_schema}
 
@@ -68,31 +67,26 @@ def run_all_api_tests(schema_file: str):
 
         # Get the actual simplified schema entry for this operation
         schema_entry = simplified_schema_dict.get(operation_name)
-        
+
         if not schema_entry:
             print(f"  SKIP: Operation '{operation_name}' not found in the loaded schema.")
             failed_tests += 1
             continue
 
         response = use_api(
-            simplified_schema=simplified_schema, # Pass the full list
-            operation_name=operation_name,
-            path_params=test_config.get("path_params"),
-            query_params=test_config.get("query_params"),
-            body_data=test_config.get("body_data"),
-            headers=test_config.get("headers")
+            simplified_schema_entry=schema_entry,
+            path_params=test_config.get("path_params") or {},
+            query_params=test_config.get("query_params") or {},
+            body_data=test_config.get("body_data") or {},
+            headers=test_config.get("headers") or {}
         )
 
-        if response is not None:
-            # Consider 2xx status codes as success
-            if 200 <= response.status_code < 300:
-                print(f"  PASS: {operation_name} - Status: {response.status_code}")
-                passed_tests += 1
-            else:
-                print(f"  FAIL: {operation_name} - Status: {response.status_code} - Error: {response.text.strip()}")
-                failed_tests += 1
+        # use_api returns a string (JSON or error message)
+        if response and not response.strip().startswith(("Error:", "API Error", "Connection Error", "Timeout Error")):
+            print(f"  PASS: {operation_name}")
+            passed_tests += 1
         else:
-            print(f"  FAIL: {operation_name} - No response (e.g., connection error, timeout, or schema error).")
+            print(f"  FAIL: {operation_name} - {response[:200] if response else 'No response'}")
             failed_tests += 1
 
     print("\n--- Test Summary ---")
@@ -106,9 +100,9 @@ def run_all_api_tests(schema_file: str):
         print("All tests passed successfully!")
 
 if __name__ == "__main__":
-    # Ensure the sample_schema.json exists for the test to run
+    # Ensure the sample_schema.json exists for the test to run (path relative to cwd, typically project root)
     if not os.path.exists(SCHEMA_FILE_PATH):
-        print(f"Error: '{SCHEMA_FILE_PATH}' not found. Please ensure it's in the same directory.")
+        print(f"Error: '{SCHEMA_FILE_PATH}' not found. Run from project root.")
         print("You need to save the full OpenAPI JSON content (from previous step) into this file.")
     else:
         run_all_api_tests(SCHEMA_FILE_PATH)

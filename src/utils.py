@@ -92,7 +92,7 @@ def read_and_simplify_schema(file_path: str) -> list:
             except json.JSONDecodeError:
                 f.seek(0)
                 openapi_data = yaml.safe_load(f)
-        
+
         return simplify_openapi_schema(openapi_data)
 
     except FileNotFoundError:
@@ -104,7 +104,7 @@ def read_and_simplify_schema(file_path: str) -> list:
     except Exception as e:
         print(f"An unexpected error occurred while reading or simplifying schema: {e}")
         return []
-    
+
 
 def print_simplified_schema(simplified_schema: list):
     """
@@ -158,7 +158,7 @@ def use_api(
         placeholder = "{" + param_name + "}"
         if placeholder in full_url:
             full_url = full_url.replace(placeholder, str(param_value))
-        
+
     # Basic validation: Check if all required path parameters were actually substituted
     for param_def in simplified_schema_entry.get("parameters", []):
         if param_def.get("in") == "path" and param_def.get("required"):
@@ -166,7 +166,7 @@ def use_api(
                  return f"Error: Required path parameter '{param_def['name']}' was not provided or substituted in URL for operation '{operation_name}': {full_url}."
 
     print(f"\n--- Tool Calling: {method} {full_url} ---") # Log tool call for verbose agent output
-    
+
     # 2. Make the request using the requests library
     try:
         if method == "GET":
@@ -183,7 +183,7 @@ def use_api(
             return f"Error: Unsupported HTTP method '{method}' for operation '{operation_name}'."
 
         response.raise_for_status() # Raise HTTPError for bad responses (4xx or 5xx)
-        
+
         # Attempt to parse JSON response, otherwise return raw text
         try:
             return json.dumps(response.json(), indent=2)
