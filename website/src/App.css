@@ -53,6 +53,25 @@
   color: var(--color-fg-muted);
 }
 
+.site-footer-tagline {
+  margin: 0 0 var(--space-sm);
+}
+
+.site-footer-links {
+  display: flex;
+  gap: var(--space-lg);
+  flex-wrap: wrap;
+}
+
+.site-footer-link {
+  color: var(--color-fg-muted);
+  text-decoration: none;
+}
+
+.site-footer-link:hover {
+  color: var(--color-accent);
+}
+
 .index-hero {
   max-width: 40rem;
   margin: 0 auto;
@@ -131,6 +150,11 @@
 
 .site-nav-link:hover {
   color: var(--color-accent);
+}
+
+.site-nav-link--active {
+  color: var(--color-accent);
+  font-weight: 500;
 }
 
 .docs-layout {
