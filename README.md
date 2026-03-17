@@ -76,3 +76,16 @@ Use **discover_operations** with a natural-language query to get matching API op
 ## Schema format
 
 The server expects a standard OpenAPI 3.x file with a `servers` block. It converts each operation into a simplified shape: `name`, `tags`, `url`, `method`, `parameters`, `responses`. The bundled `sample_schema.json` (Nager.Date holiday API) is there so you can try it immediately.
+
+---
+
+## Website deployment
+
+The repository now includes a small static site in `site/` and a GitHub Actions workflow that publishes it to GitHub Pages from the `main` branch.
+
+Branch and path conventions:
+
+- `main` is the deploy branch.
+- Static site files live under `site/`.
+- The published site root is the contents of `site/`; keep relative links rooted there.
+- When adding pages, prefer short, descriptive filenames such as `index.html` and `docs.html`.
