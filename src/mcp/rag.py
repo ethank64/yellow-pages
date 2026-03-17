@@ -12,6 +12,7 @@ from src.config import DEFAULT_CHROMA_DIR, DEFAULT_SCHEMA_PATH, EMBEDDING_MODEL_
 from src.utils import read_and_simplify_schema, use_api
 
 ALL_SIMPLIFIED_SCHEMAS_DICT: dict[str, dict] = {}
+_retriever = None
 
 
 def init_rag(
@@ -46,15 +47,22 @@ def init_rag(
     return retriever
 
 
+def ensure_rag():
+    """Initialize the schema cache and retriever on demand."""
+    global _retriever
+    if _retriever is None:
+        _retriever = init_rag(verbose=False)
+    return _retriever
+
+
 def discover(query: str, k: int = 5) -> list[dict]:
     """
     RAG only: retrieve operations relevant to the query. Returns a list of operation
     schema entries (operation_name, method, url, parameters, etc.) so the caller
     can choose which to run and with what params. No LLM; no execution.
     """
-    if _retriever is None:
-        return []
-    relevant_docs = _retriever.invoke(query)
+    retriever = ensure_rag()
+    relevant_docs = retriever.invoke(query)
     if not relevant_docs:
         return []
 
@@ -90,10 +98,6 @@ def execute(
         query_params=query_params or {},
         body_data=body_data or {},
     )
-
-
-# Set by server after init_rag()
-_retriever = None
 
 
 def set_retriever(retriever):
