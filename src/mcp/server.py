@@ -12,15 +12,7 @@ load_dotenv()
 
 from mcp.server.fastmcp import FastMCP
 
-from .rag import discover, execute, init_rag, set_retriever
-
-# Load schema + Chroma (indexer must have run first). No LLM.
-try:
-    retriever = init_rag(verbose=False)
-    set_retriever(retriever)
-except FileNotFoundError as e:
-    print(f"Error: {e}", file=sys.stderr)
-    sys.exit(1)
+from .rag import discover, execute
 
 mcp = FastMCP("YellowPages")
 
