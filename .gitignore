@@ -146,8 +146,8 @@ venv.bak/
 # Rope project settings
 .ropeproject
 
-# mkdocs documentation
-/site
+# mkdocs documentation (if used, use a different output dir e.g. mkdocs_site)
+# /site is now the project landing page
 
 # mypy
 .mypy_cache/
