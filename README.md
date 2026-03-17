@@ -76,3 +76,16 @@ Use **discover_operations** with a natural-language query to get matching API op
 ## Schema format
 
 The server expects a standard OpenAPI 3.x file with a `servers` block. It converts each operation into a simplified shape: `name`, `tags`, `url`, `method`, `parameters`, `responses`. The bundled `sample_schema.json` (Nager.Date holiday API) is there so you can try it immediately.
+
+---
+
+## Website deployment
+
+The repository now includes a Vite + React website in `website/` and a GitHub Actions workflow that publishes the built app to GitHub Pages from the `main` branch.
+
+Branch and path conventions:
+
+- `main` is the deploy branch.
+- The website source lives under `website/`.
+- The published site root is the build output in `website/dist/`.
+- When adding pages or routes, keep them under `website/src/` and prefer route-based navigation over hard-coded file paths.
