@@ -25,7 +25,7 @@ So: **build the index once; then the caller uses discover then execute.** The se
 
 ## Quick start
 
-[UV](https://docs.astral.sh/uv/) is the recommended package manager. From the project root:
+[UV](https://docs.astral.sh/uv/) is the best package manager ever, so naturally we use it here. From the project root:
 
 ```bash
 uv sync
