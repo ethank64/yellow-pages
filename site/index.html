@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>YellowPages – Discover and execute API operations</title>
+  <meta name="description" content="MCP server: discover API operations via RAG, execute by ID. Your agent stays in control." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;1,9..40,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="noise" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <a href="#" class="logo">YellowPages</a>
+    <nav>
+      <a href="#how-it-works">How it works</a>
+      <a href="#docs">Docs</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <p class="hero-tagline">Discover and execute API operations.</p>
+      <h1 class="hero-title">Your agent stays in control.</h1>
+      <p class="hero-desc">
+        YellowPages is an MCP server that exposes two tools: <strong>discover</strong> (RAG over an OpenAPI schema, returns matching operations with their schema) and <strong>execute</strong> (runs an operation by ID with given params). No LLM inside the server—your caller agent chooses which operation and parameters to use.
+      </p>
+      <div class="hero-cta">
+        <a href="#docs" class="btn btn-primary">Go to docs</a>
+        <a href="#how-it-works" class="btn btn-ghost">How it works</a>
+      </div>
+    </section>
+
+    <section class="value" id="value">
+      <h2 class="section-title">Why it exists</h2>
+      <p class="value-copy">
+        APIs are everywhere, but using them usually means reading specs, copying URLs, and wiring parameters. YellowPages inverts that: you load an OpenAPI schema once and index it, then your MCP host (e.g. Cursor) can call <strong>discover</strong> with a natural-language query to get matching operations (with IDs and JSON schema), then call <strong>execute</strong> with the chosen operation and params. The server does RAG for discovery and runs the HTTP call; the caller agent decides what to call and with what arguments.
+      </p>
+    </section>
+
+    <section class="how" id="how-it-works">
+      <h2 class="section-title">How it works</h2>
+      <p class="how-intro">Build the index once; then the caller uses discover then execute. The server expects the Chroma directory to already exist.</p>
+      <ol class="steps">
+        <li class="step">
+          <span class="step-num" aria-hidden="true">1</span>
+          <h3>Indexer</h3>
+          <p>Build the vector DB once (or when the schema changes). Run the indexer with your OpenAPI schema path and Chroma directory. It flattens the schema into operations and indexes them in Chroma with local embeddings (sentence-transformers/all-MiniLM-L6-v2 by default).</p>
+        </li>
+        <li class="step">
+          <span class="step-num" aria-hidden="true">2</span>
+          <h3>Discover</h3>
+          <p>The MCP server exposes <strong>discover_operations</strong>: RAG only; returns matching operations with ID and schema. Your agent sends a natural-language query and gets back operations with name, method, url, and parameters.</p>
+        </li>
+        <li class="step">
+          <span class="step-num" aria-hidden="true">3</span>
+          <h3>Execute</h3>
+          <p>The server exposes <strong>execute_operation</strong>: runs an operation by name with path/query/body params. No LLM inside the server; the caller agent chooses what to execute.</p>
+        </li>
+      </ol>
+    </section>
+
+    <section class="cta" id="docs">
+      <h2 class="section-title">Get started</h2>
+      <p class="cta-copy">Add YellowPages to your MCP host and point it at your OpenAPI schema.</p>
+      <div class="docs-block">
+        <h3>Quick start</h3>
+        <pre><code>uv sync
+uv run python -m src.indexer
+uv run main.py</code></pre>
+        <p>Build the vector index from your OpenAPI schema (once, or when schema changes), then start the MCP server. No API key needed; uses local embeddings.</p>
+        <h3>Adding to Cursor</h3>
+        <p>In MCP settings, add a server entry (UV recommended):</p>
+        <pre><code>{
+  "mcpServers": {
+    "yellow-pages": {
+      "command": "uv",
+      "args": ["run", "/path/to/yellow-pages/main.py"]
+    }
+  }
+}</code></pre>
+        <p>Use <strong>discover_operations</strong> with a natural-language query, then <strong>execute_operation</strong> with the chosen operation name and params. Full README and environment variables are in the repo.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>YellowPages – MCP server for discover and execute. No API key required for local embeddings.</p>
+  </footer>
+</body>
+</html>
