@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 export default function Index() {
   return (
     <section className="index-hero">
@@ -11,14 +13,9 @@ export default function Index() {
           caller agent decides what to call and when.
         </p>
         <div className="index-cta">
-          <a
-            href="https://github.com"
-            className="index-cta-link"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <Link to="/docs/quick-start" className="index-cta-link">
             Get started
-          </a>
+          </Link>
         </div>
       </div>
     </section>
