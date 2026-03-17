@@ -81,11 +81,11 @@ The server expects a standard OpenAPI 3.x file with a `servers` block. It conver
 
 ## Website deployment
 
-The repository now includes a small static site in `site/` and a GitHub Actions workflow that publishes it to GitHub Pages from the `main` branch.
+The repository now includes a Vite + React website in `website/` and a GitHub Actions workflow that publishes the built app to GitHub Pages from the `main` branch.
 
 Branch and path conventions:
 
 - `main` is the deploy branch.
-- Static site files live under `site/`.
-- The published site root is the contents of `site/`; keep relative links rooted there.
-- When adding pages, prefer short, descriptive filenames such as `index.html` and `docs.html`.
+- The website source lives under `website/`.
+- The published site root is the build output in `website/dist/`.
+- When adding pages or routes, keep them under `website/src/` and prefer route-based navigation over hard-coded file paths.
