@@ -11,6 +11,7 @@ export default function DocsLayout() {
   return (
     <div className="docs-layout">
       <nav className="docs-nav" aria-label="Docs">
+        <p className="docs-nav-title">Documentation</p>
         <ul className="docs-nav-list">
           {docLinks.map(({ to, label }) => (
             <li key={to}>
