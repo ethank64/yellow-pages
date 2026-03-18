@@ -13,8 +13,11 @@ export default function Index() {
           caller agent decides what to call and when.
         </p>
         <div className="index-cta">
-          <Link to="/docs/quick-start" className="index-cta-link">
+          <Link to="/docs/quick-start" className="index-cta-link index-cta-link--primary">
             Get started
+          </Link>
+          <Link to="/docs" className="index-cta-link index-cta-link--secondary">
+            Read the docs
           </Link>
         </div>
       </div>
